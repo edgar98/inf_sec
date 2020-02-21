@@ -1,0 +1,1132 @@
+#: import ToggleButton kivy.uix.togglebutton
+
+<CustLabel@Label>
+    color: 1, 1, 1, 1
+    font_size: 17
+
+[PopUpAccordionItemTitle@Label]:
+    text: ctx.title
+    normal_background: ctx.item.background_normal if ctx.item.collapse else ctx.item.background_selected
+    disabled_background: ctx.item.background_disabled_normal if ctx.item.collapse else ctx.item.background_disabled_selected
+    canvas.before:
+        Color:
+            rgba: self.disabled_color if self.disabled else self.color
+        BorderImage:
+            source: self.disabled_background if self.disabled else self.normal_background
+            pos: self.pos
+            size: self.size
+        PushMatrix
+        Translate:
+            xy: self.center_x, self.center_y
+        Rotate:
+            angle: 90 if ctx.item.orientation == 'horizontal' else 0
+            axis: 0, 0, 1
+        Translate:
+            xy: -self.center_x, -self.center_y
+    canvas.after:
+        PopMatrix
+
+SampTabPanel:
+
+<SampTabPanel>:
+    do_default_tab: False
+    TabbedPanelItem:
+        text: "CVSS V2"
+        SampAccordion:
+
+            orientation: "vertical"
+            padding: 10
+            spacing: 10
+
+            PopUpAccordionItem:
+                title: "Results"
+                BoxLayout:
+                    orientation: "vertical"
+                    BoxLayout:
+                        CustLabel:
+                            id: "base"
+                            text: 'Base score: {}'.format(root.base_score)
+                    BoxLayout:
+                        CustLabel:
+                            id: "temp"
+                            text: 'Temporary Score: {}'.format(root.temporal_score)
+                    BoxLayout:
+                        CustLabel:
+                            id: "envi"
+                            text: 'Environment score: {}'.format(root.environmental_score)
+
+
+            PopUpAccordionItem:
+                title: "Base Score Metrics"
+
+                BoxLayout:
+                    orientation: "vertical"
+
+                    BoxLayout:
+                        orientation: "vertical"
+                        CustLabel:
+                            text: "Exploitability Metrics"
+
+                        BoxLayout:
+                            orientation: "vertical"
+                            CustLabel:
+                                text: "Attack Vector (AV)"
+                            BoxLayout:
+                                orientation: "horizontal"
+                                ToggleButton:
+                                    text: "Local (AV:L)"
+                                    group: "av"
+                                    value: 0.395
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "Adjacent Network (AV:A)"
+                                    group: "av"
+                                    value: 0.646
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "Network (AV:N)"
+                                    group: "av"
+                                    value: 1
+                                    on_press: root.calculate(self.group, self.value)
+
+                        BoxLayout:
+                            orientation: "vertical"
+                            CustLabel:
+                                text: "Access Complexity (AC)"
+                            BoxLayout:
+                                orientation: "horizontal"
+                                ToggleButton:
+                                    text: "High (AC:H)"
+                                    group: "ac"
+                                    value: 0.35
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "Medium (AC:M)"
+                                    group: "ac"
+                                    value: 0.61
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "Low (AC:L)"
+                                    group: "ac"
+                                    value: 0.71
+                                    on_press: root.calculate(self.group, self.value)
+
+                        BoxLayout:
+                            orientation: "vertical"
+                            CustLabel:
+                                text: "Authentication (Au)"
+                            BoxLayout:
+                                orientation: "horizontal"
+                                ToggleButton:
+                                    text: "Multiple (Au:M)"
+                                    group: "au"
+                                    value: 0.45
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "Single (Au:S)"
+                                    group: "au"
+                                    value: 0.56
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "None (Au:N)"
+                                    group: "au"
+                                    value: 0.704
+                                    on_press: root.calculate(self.group, self.value)
+
+                    BoxLayout:
+                        orientation: "vertical"
+                        CustLabel:
+                            text: "Impact Metrics"
+
+                        BoxLayout:
+                            orientation: "vertical"
+                            CustLabel:
+                                text: "Confidentiality Impact (C)"
+                            BoxLayout:
+                                orientation: "horizontal"
+                                ToggleButton:
+                                    text: "None (C:N)"
+                                    group: "c"
+                                    value: 0
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "Partial (C:P)"
+                                    group: "c"
+                                    value: 0.275
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "Complete (C:C)"
+                                    group: "c"
+                                    value: 0.66
+                                    on_press: root.calculate(self.group, self.value)
+
+                        BoxLayout:
+                            orientation: "vertical"
+                            CustLabel:
+                                text: "Integrity Impact (I)"
+                            BoxLayout:
+                                orientation: "horizontal"
+                                ToggleButton:
+                                    text: "None (I:N)"
+                                    group: "i"
+                                    value: 0
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "Partial (I:P)"
+                                    group: "i"
+                                    value: 0.275
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "Complete (I:C)"
+                                    group: "i"
+                                    value: 0.66
+                                    on_press: root.calculate(self.group, self.value)
+
+                        BoxLayout:
+                            orientation: "vertical"
+                            CustLabel:
+                                text: "Availability Impact (A)"
+                            BoxLayout:
+                                orientation: "horizontal"
+                                ToggleButton:
+                                    text: "None (A:N)"
+                                    group: "a"
+                                    value: 0
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "Partial (A:P)"
+                                    group: "a"
+                                    value: 0.275
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "Complete (A:C)"
+                                    group: "a"
+                                    value: 0.66
+                                    on_press: root.calculate(self.group, self.value)
+
+            PopUpAccordionItem:
+                title: "Temporal Score Metrics"
+
+                BoxLayout:
+                    orientation: "vertical"
+
+                    BoxLayout:
+                        orientation: "vertical"
+                        CustLabel:
+                            text: "Exploitability (E)"
+                            size_hint_y: .20
+                        StackLayout:
+                            orientation: "lr-tb"
+                            spacing: [5, 5]
+                            ToggleButton:
+                                text: "Not Defined (E:ND)"
+                                size_hint_y: .20
+                                size_hint_x: .20
+                                group: "exp"
+                                value: 1
+                                on_press: root.calculate(self.group, self.value)
+                            ToggleButton:
+                                text: "Unproven that exploit exists (E:U)"
+                                size_hint_y: .20
+                                size_hint_x: .35
+                                group: "exp"
+                                value: 0.85
+                                on_press: root.calculate(self.group, self.value)
+                            ToggleButton:
+                                text: "Proof of concept code (E:POC)"
+                                size_hint_y: .20
+                                size_hint_x: .30
+                                group: "exp"
+                                value: 0.9
+                                on_press: root.calculate(self.group, self.value)
+                            ToggleButton:
+                                text: "Functional exploit exists (E:F)"
+                                size_hint_y: .20
+                                size_hint_x: .25
+                                group: "exp"
+                                value: 0.95
+                                on_press: root.calculate(self.group, self.value)
+                            ToggleButton:
+                                text: "High (E:H)"
+                                size_hint_y: .20
+                                size_hint_x: .10
+                                group: "exp"
+                                value: 1
+                                on_press: root.calculate(self.group, self.value)
+
+
+                    BoxLayout:
+                        orientation: "vertical"
+                        CustLabel:
+                            text: "Remediation Level (RL)"
+                            size_hint_y: .20
+                        StackLayout:
+                            orientation: "lr-tb"
+                            ToggleButton:
+                                text: "Not defined (RL:ND)"
+                                size_hint_y: .20
+                                size_hint_x: .25
+                                group: "rl"
+                                value: 1
+                                on_press: root.calculate(self.group, self.value)
+                            ToggleButton:
+                                text: "Official fix (RL:OF)"
+                                size_hint_y: .20
+                                size_hint_x: .25
+                                group: "rl"
+                                value: 0.87
+                                on_press: root.calculate(self.group, self.value)
+                            ToggleButton:
+                                text: "Temporary fix (RL:TF)"
+                                size_hint_y: .20
+                                size_hint_x: .25
+                                group: "rl"
+                                value: 0.9
+                                on_press: root.calculate(self.group, self.value)
+                            ToggleButton:
+                                text: "Workaround (RL:W)"
+                                size_hint_y: .20
+                                size_hint_x: .25
+                                group: "rl"
+                                value: 0.95
+                                on_press: root.calculate(self.group, self.value)
+                            ToggleButton:
+                                text: "Unavailable (RL:U)"
+                                size_hint_y: .20
+                                size_hint_x: .25
+                                group: "rl"
+                                value: 1
+                                on_press: root.calculate(self.group, self.value)
+
+                    BoxLayout:
+                        orientation: "vertical"
+                        CustLabel:
+                            text: "Report Confidence (RC)"
+                            size_hint_y: .20
+                        StackLayout:
+                            orientation: "lr-tb"
+                            ToggleButton:
+                                text: "Not defined (RC:ND)"
+                                size_hint_y: .20
+                                size_hint_x: .25
+                                group: "rc"
+                                value: 1
+                                on_press: root.calculate(self.group, self.value)
+                            ToggleButton:
+                                text: "Unconfirmed (RC:UC)"
+                                size_hint_y: .20
+                                size_hint_x: .25
+                                group: "rc"
+                                value: 0.9
+                                on_press: root.calculate(self.group, self.value)
+                            ToggleButton:
+                                text: "Uncorroborated (RC:UR)"
+                                size_hint_y: .20
+                                size_hint_x: .25
+                                group: "rc"
+                                value: 0.95
+                                on_press: root.calculate(self.group, self.value)
+                            ToggleButton:
+                                text: "Confirmed (RC:C)"
+                                size_hint_y: .20
+                                size_hint_x: .25
+                                group: "rc"
+                                value: 1
+                                on_press: root.calculate(self.group, self.value)
+
+            PopUpAccordionItem:
+                title: "Environmental Score Metrics"
+
+                BoxLayout:
+                    orientation: "vertical"
+
+                    BoxLayout:
+                        orientation: "vertical"
+
+                        CustLabel:
+                            text: "General Modifiers"
+                            size_hint_y: .15
+
+                        BoxLayout:
+                            orientation: "vertical"
+                            CustLabel:
+                                text: "Collateral Damage Potential (CDP)"
+                            BoxLayout:
+                                orientation: "horizontal"
+                                ToggleButton:
+                                    text: "Not Defined (CDP:ND)"
+                                    group: "cdp"
+                                    value: 0
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "None (CDP:N)"
+                                    group: "cdp"
+                                    value: 0
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "Low (CDP:L)"
+                                    group: "cdp"
+                                    value: 0.1
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "Low-Medium (CDP:LM)"
+                                    group: "cdp"
+                                    value: 0.3
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "Medium-High (CDP:MH)"
+                                    group: "cdp"
+                                    value: 0.4
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "High (CDP:H)"
+                                    group: "cdp"
+                                    value: 0.5
+                                    on_press: root.calculate(self.group, self.value)
+
+
+                            CustLabel:
+                                text: "Target Distribution (TD)"
+                            BoxLayout:
+                                orientation: "horizontal"
+                                ToggleButton:
+                                    text: "Not Defined (TD:ND)"
+                                    group: "td"
+                                    value: 1
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "None [0%] (TD:N)"
+                                    group: "td"
+                                    value: 0
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "Low [0-25%] (TD:L)"
+                                    group: "td"
+                                    value: 0.25
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "Medium [26-75%] (TD:M)"
+                                    group: "td"
+                                    value: 0.75
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "High [76-100%] (TD:H)"
+                                    group: "td"
+                                    value: 1
+                                    on_press: root.calculate(self.group, self.value)
+
+                    BoxLayout:
+                        orientation: "vertical"
+
+                        CustLabel:
+                            text: "Impact Subscore Modifiers"
+                            size_hint_y: .15
+
+                        BoxLayout:
+                            orientation: "vertical"
+                            CustLabel:
+                                text: "Confidentiality Requirement (CR)"
+                            BoxLayout:
+                                orientation: "horizontal"
+                                ToggleButton:
+                                    text: "Not Defined (CR:ND)"
+                                    group: "cr"
+                                    value: 1
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "Low (CR:L)"
+                                    group: "cr"
+                                    value: 0.5
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "Medium (CR:M)"
+                                    group: "cr"
+                                    value: 1
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "High (CR:H)"
+                                    group: "cr"
+                                    value: 1.51
+                                    on_press: root.calculate(self.group, self.value)
+
+
+                            CustLabel:
+                                text: "Integrity Requirement (IR)"
+                            BoxLayout:
+                                orientation: "horizontal"
+                                ToggleButton:
+                                    text: "Not Defined (IR:ND)"
+                                    group: "ir"
+                                    value: 1
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "Low (IR:L)"
+                                    group: "ir"
+                                    value: 0.5
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "Medium (IR:M)"
+                                    group: "ir"
+                                    value: 1
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "High (IR:H)"
+                                    group: "ir"
+                                    value: 1.51
+                                    on_press: root.calculate(self.group, self.value)
+
+
+                            CustLabel:
+                                text: "Availability Requirement (AR)"
+                            BoxLayout:
+                                orientation: "horizontal"
+                                ToggleButton:
+                                    text: "Not Defined (AR:ND)"
+                                    group: "ar"
+                                    value: 1
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "Low (AR:L)"
+                                    group: "ar"
+                                    value: 0.5
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "Medium (AR:M)"
+                                    group: "ar"
+                                    value: 1
+                                    on_press: root.calculate(self.group, self.value)
+                                ToggleButton:
+                                    text: "High (AR:H)"
+                                    group: "ar"
+                                    value: 1.51
+                                    on_press: root.calculate(self.group, self.value)
+
+    TabbedPanelItem:
+        text: "CVSS V3"
+        SampAccordion:
+
+            orientation: "vertical"
+            padding: 10
+            spacing: 10
+
+            PopUpAccordionItem:
+                title: "Results"
+                BoxLayout:
+                    orientation: "vertical"
+                    BoxLayout:
+                        CustLabel:
+                            id: "base"
+                            text: 'Base score: {}'.format(root.base_score_v3)
+                    BoxLayout:
+                        CustLabel:
+                            id: "temp"
+                            text: 'Temporal Score: {}'.format(root.temporal_score_v3)
+                    BoxLayout:
+                        CustLabel:
+                            id: "envi"
+                            text: 'Environment score: {}'.format(root.environmental_score_v3)
+
+
+            PopUpAccordionItem:
+                title: "Base Score Metrics"
+
+                BoxLayout:
+                    orientation: "vertical"
+
+                    BoxLayout:
+                        orientation: "vertical"
+                        CustLabel:
+                            text: "Exploitability Metrics"
+
+                        BoxLayout:
+                            orientation: "vertical"
+                            CustLabel:
+                                text: "Attack Vector (AV)"
+                            BoxLayout:
+                                orientation: "horizontal"
+                                ToggleButton:
+                                    text: "Network (AV:N)"
+                                    group: "av"
+                                    id: 'n'
+                                    on_press: root.calculate_v3(self.text)
+                                ToggleButton:
+                                    text: "Adjacent Network (AV:A)"
+                                    group: "av"
+                                    id: 'a'
+                                    on_press: root.calculate_v3(self.text)
+                                ToggleButton:
+                                    text: "Local (AV:L)"
+                                    group: "av"
+                                    id: 'l'
+                                    on_press: root.calculate_v3(self.text)
+                                ToggleButton:
+                                    text: "Physical (AV:P)"
+                                    group: "av"
+                                    id: 'p'
+                                    on_press: root.calculate_v3(self.text)
+
+                        BoxLayout:
+                            orientation: "vertical"
+                            CustLabel:
+                                text: "Attack Complexity (AC)"
+                            BoxLayout:
+                                orientation: "horizontal"
+                                ToggleButton:
+                                    text: "Low (AC:L)"
+                                    group: "ac"
+                                    id: 'l'
+                                    on_press: root.calculate_v3(self.text)
+                                ToggleButton:
+                                    text: "High (AC:H)"
+                                    group: "ac"
+                                    id: 'h'
+                                    on_press: root.calculate_v3(self.text)
+
+                        BoxLayout:
+                            orientation: "vertical"
+                            CustLabel:
+                                text: "Privileges Required (PR)"
+                            BoxLayout:
+                                orientation: "horizontal"
+                                ToggleButton:
+                                    text: "None (PR:N)"
+                                    group: "pr"
+                                    id: 'n'
+                                    on_press: root.calculate_v3(self.text)
+                                ToggleButton:
+                                    text: "Low (PR:L)"
+                                    group: "pr"
+                                    id: 'l'
+                                    on_press: root.calculate_v3(self.text)
+                                ToggleButton:
+                                    text: "High (PR:H)"
+                                    group: "pr"
+                                    id: 'h'
+                                    on_press: root.calculate_v3(self.text)
+
+                        BoxLayout:
+                            orientation: "vertical"
+                            CustLabel:
+                                text: "User Interaction (UI)"
+                            BoxLayout:
+                                orientation: "horizontal"
+                                ToggleButton:
+                                    text: "None (UI:N)"
+                                    group: "ui"
+                                    id: 'n'
+                                    on_press: root.calculate_v3(self.text)
+                                ToggleButton:
+                                    text: "Required (UI:R)"
+                                    group: "ui"
+                                    id: 'r'
+                                    on_press: root.calculate_v3(self.text)
+                        BoxLayout:
+                            orientation: "vertical"
+                            CustLabel:
+                                text: "Scope (S)"
+                            BoxLayout:
+                                orientation: "horizontal"
+                                ToggleButton:
+                                    text: "Unchanged (S:U)"
+                                    group: "s"
+                                    id: 'u'
+                                    on_press: root.calculate_v3(self.text)
+                                ToggleButton:
+                                    text: "Changed (S:C)"
+                                    group: "s"
+                                    id: 'c'
+                                    on_press: root.calculate_v3(self.text)
+
+                    BoxLayout:
+                        orientation: "vertical"
+                        CustLabel:
+                            text: "Impact Metrics"
+
+                        BoxLayout:
+                            orientation: "vertical"
+                            CustLabel:
+                                text: "Confidentiality Impact (C)"
+                            BoxLayout:
+                                orientation: "horizontal"
+                                ToggleButton:
+                                    text: "None (C:N)"
+                                    group: "c"
+                                    id: 'n'
+                                    on_press: root.calculate_v3(self.text)
+                                ToggleButton:
+                                    text: "Low (C:L)"
+                                    group: "c"
+                                    id: 'l'
+                                    on_press: root.calculate_v3(self.text)
+                                ToggleButton:
+                                    text: "High (C:H)"
+                                    group: "c"
+                                    id: 'h'
+                                    on_press: root.calculate_v3(self.text)
+
+                        BoxLayout:
+                            orientation: "vertical"
+                            CustLabel:
+                                text: "Integrity Impact (I)"
+                            BoxLayout:
+                                orientation: "horizontal"
+                                ToggleButton:
+                                    text: "None (I:N)"
+                                    group: "i"
+                                    id: 'n'
+                                    on_press: root.calculate_v3(self.text)
+                                ToggleButton:
+                                    text: "Low (I:L)"
+                                    group: "i"
+                                    id: 'l'
+                                    on_press: root.calculate_v3(self.text)
+                                ToggleButton:
+                                    text: "High (I:H)"
+                                    group: "i"
+                                    id: 'h'
+                                    on_press: root.calculate_v3(self.text)
+
+                        BoxLayout:
+                            orientation: "vertical"
+                            CustLabel:
+                                text: "Availability Impact (A)"
+                            BoxLayout:
+                                orientation: "horizontal"
+                                ToggleButton:
+                                    text: "None (A:N)"
+                                    group: "a"
+                                    id: 'n'
+                                    on_press: root.calculate_v3(self.text)
+                                ToggleButton:
+                                    text: "Low (A:L)"
+                                    group: "a"
+                                    id: 'l'
+                                    on_press: root.calculate_v3(self.text)
+                                ToggleButton:
+                                    text: "High (A:H)"
+                                    group: "a"
+                                    id: 'h'
+                                    on_press: root.calculate_v3(self.text)
+
+            PopUpAccordionItem:
+                title: "Temporal Score Metrics"
+
+                BoxLayout:
+                    orientation: "vertical"
+
+                    BoxLayout:
+                        orientation: "vertical"
+                        CustLabel:
+                            text: "Exploitability (E)"
+                            size_hint_y: .20
+                        StackLayout:
+                            orientation: "lr-tb"
+                            spacing: [5, 5]
+                            ToggleButton:
+                                text: "Not Defined (E:X)"
+                                size_hint_y: .20
+                                size_hint_x: .20
+                                group: "exp"
+                                id: 'x'
+                                on_press: root.calculate_v3(self.text)
+                            ToggleButton:
+                                text: "Unproven that exploit exists (E:U)"
+                                size_hint_y: .20
+                                size_hint_x: .35
+                                group: "exp"
+                                id: 'u'
+                                on_press: root.calculate_v3(self.text)
+                            ToggleButton:
+                                text: "Proof of concept code (E:P)"
+                                size_hint_y: .20
+                                size_hint_x: .30
+                                group: "exp"
+                                id: 'p'
+                                on_press: root.calculate_v3(self.text)
+                            ToggleButton:
+                                text: "Functional exploit exists (E:F)"
+                                size_hint_y: .20
+                                size_hint_x: .25
+                                group: "exp"
+                                id: 'f'
+                                on_press: root.calculate_v3(self.text)
+                            ToggleButton:
+                                text: "High (E:H)"
+                                size_hint_y: .20
+                                size_hint_x: .10
+                                group: "exp"
+                                id: 'h'
+                                on_press: root.calculate_v3(self.text)
+
+
+                    BoxLayout:
+                        orientation: "vertical"
+                        CustLabel:
+                            text: "Remediation Level (RL)"
+                            size_hint_y: .20
+                        StackLayout:
+                            orientation: "lr-tb"
+                            ToggleButton:
+                                text: "Not defined (RL:X)"
+                                size_hint_y: .20
+                                size_hint_x: .25
+                                group: "rl"
+                                id: 'x'
+                                on_press: root.calculate_v3(self.text)
+                            ToggleButton:
+                                text: "Official fix (RL:O)"
+                                size_hint_y: .20
+                                size_hint_x: .25
+                                group: "rl"
+                                id: 'o'
+                                on_press: root.calculate_v3(self.text)
+                            ToggleButton:
+                                text: "Temporary fix (RL:T)"
+                                size_hint_y: .20
+                                size_hint_x: .25
+                                group: "rl"
+                                id: 't'
+                                on_press: root.calculate_v3(self.text)
+                            ToggleButton:
+                                text: "Workaround (RL:W)"
+                                size_hint_y: .20
+                                size_hint_x: .25
+                                group: "rl"
+                                id: 'w'
+                                on_press: root.calculate_v3(self.text)
+                            ToggleButton:
+                                text: "Unavailable (RL:U)"
+                                size_hint_y: .20
+                                size_hint_x: .25
+                                group: "rl"
+                                id: 'u'
+                                on_press: root.calculate_v3(self.text)
+
+                    BoxLayout:
+                        orientation: "vertical"
+                        CustLabel:
+                            text: "Report Confidence (RC)"
+                            size_hint_y: .20
+                        StackLayout:
+                            orientation: "lr-tb"
+                            ToggleButton:
+                                text: "Not defined (RC:X)"
+                                size_hint_y: .20
+                                size_hint_x: .25
+                                group: "rc"
+                                id: 'x'
+                                on_press: root.calculate_v3(self.text)
+                            ToggleButton:
+                                text: "Unknown(RC:U)"
+                                size_hint_y: .20
+                                size_hint_x: .25
+                                group: "rc"
+                                id: 'u'
+                                on_press: root.calculate_v3(self.text)
+                            ToggleButton:
+                                text: "Reasonable (RC:R)"
+                                size_hint_y: .20
+                                size_hint_x: .25
+                                group: "rc"
+                                id: 'r'
+                                on_press: root.calculate_v3(self.text)
+                            ToggleButton:
+                                text: "Confirmed (RC:C)"
+                                size_hint_y: .20
+                                size_hint_x: .25
+                                group: "rc"
+                                id: 'c'
+                                on_press: root.calculate_v3(self.text)
+
+            PopUpAccordionItem:
+                title: "Environmental Score Metrics"
+
+                BoxLayout:
+                    SampAccordion:
+                        orientation: "horizontal"
+
+                        PopUpAccordionItem:
+                            title: "Base Modifiers"
+                            orientation: "vertical"
+
+                            BoxLayout:
+                                orientation: "vertical"
+                                CustLabel:
+                                    text: "Attack Vector (AV)"
+                                BoxLayout:
+                                    orientation: "horizontal"
+                                    ToggleButton:
+                                        text: "Not Defined (MAV:X)"
+                                        group: "mav"
+                                        id: 'x'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "Network (MAV:N)"
+                                        group: "mav"
+                                        id: 'n'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "Adjacent Network (MAV:A)"
+                                        group: "mav"
+                                        id: 'a'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "Local (MAV:L)"
+                                        group: "mav"
+                                        id: 'l'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "Physical (MAV:P)"
+                                        group: "mav"
+                                        id: 'p'
+                                        on_press: root.calculate_v3(self.text)
+
+                                CustLabel:
+                                    text: "Attack Complexity (AC)"
+                                BoxLayout:
+                                    orientation: "horizontal"
+                                    ToggleButton:
+                                        text: "Not Defined (MAC:X)"
+                                        group: "mac"
+                                        id: 'x'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "Low (MAC:L)"
+                                        group: "mac"
+                                        id: 'l'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "High (MAC:H)"
+                                        group: "mac"
+                                        id: 'h'
+                                        on_press: root.calculate_v3(self.text)
+
+                                CustLabel:
+                                    text: "Privileges Required (PR)"
+                                BoxLayout:
+                                    orientation: "horizontal"
+                                    ToggleButton:
+                                        text: "Not Defined (MPR:X)"
+                                        group: "mpr"
+                                        id: 'x'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "None (MPR:N)"
+                                        group: "mpr"
+                                        id: 'n'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "Low (MPR:L)"
+                                        group: "mpr"
+                                        id: 'l'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "High (MPR:H)"
+                                        group: "mpr"
+                                        id: 'h'
+                                        on_press: root.calculate_v3(self.text)
+
+                                CustLabel:
+                                    text: "User Interaction (UI)"
+                                BoxLayout:
+                                    orientation: "horizontal"
+                                    ToggleButton:
+                                        text: "Not Defined (MUI:X)"
+                                        group: "mui"
+                                        id: 'x'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "None (MUI:N)"
+                                        group: "mui"
+                                        id: 'n'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "Required (MUI:R)"
+                                        group: "mui"
+                                        id: 'r'
+                                        on_press: root.calculate_v3(self.text)
+                                CustLabel:
+                                    text: "Scope (S)"
+                                BoxLayout:
+                                    orientation: "horizontal"
+                                    ToggleButton:
+                                        text: "Not Defined (MS:X)"
+                                        group: "ms"
+                                        id: 'x'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "Unchanged (MS:U)"
+                                        group: "ms"
+                                        id: 'u'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "Changed (MS:C)"
+                                        group: "ms"
+                                        id: 'c'
+                                        on_press: root.calculate_v3(self.text)
+
+                        PopUpAccordionItem:
+                            orientation: "vertical"
+                            title: "Impact Metrics"
+
+                            BoxLayout:
+                                orientation: "vertical"
+                                CustLabel:
+                                    text: "Confidentiality Impact (C)"
+                                BoxLayout:
+                                    orientation: "horizontal"
+                                    ToggleButton:
+                                        text: "Not Defined (MC:X)"
+                                        group: "mc"
+                                        id: 'x'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "None (MC:N)"
+                                        group: "mc"
+                                        id: 'n'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "Low (MC:L)"
+                                        group: "mc"
+                                        id: 'l'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "High (MC:H)"
+                                        group: "mc"
+                                        id: 'h'
+                                        on_press: root.calculate_v3(self.text)
+
+                                CustLabel:
+                                    text: "Integrity Impact (I)"
+                                BoxLayout:
+                                    orientation: "horizontal"
+                                    ToggleButton:
+                                        text: "Not Defined (MI:X)"
+                                        group: "mi"
+                                        id: 'x'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "None (MI:N)"
+                                        group: "mi"
+                                        id: 'n'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "Low (MI:L)"
+                                        group: "mi"
+                                        id: 'l'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "High (MI:H)"
+                                        group: "mi"
+                                        id: 'h'
+                                        on_press: root.calculate_v3(self.text)
+
+                                CustLabel:
+                                    text: "Availability Impact (A)"
+                                BoxLayout:
+                                    orientation: "horizontal"
+                                    ToggleButton:
+                                        text: "Not Defined (MA:X)"
+                                        group: "ma"
+                                        id: 'x'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "None (MA:N)"
+                                        group: "ma"
+                                        id: 'n'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "Low (MA:L)"
+                                        group: "ma"
+                                        id: 'l'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "High (MA:H)"
+                                        group: "ma"
+                                        id: 'h'
+                                        on_press: root.calculate_v3(self.text)
+
+
+
+                        PopUpAccordionItem:
+                            orientation: "vertical"
+                            title: "Impact Subscore Modifiers"
+
+                            BoxLayout:
+                                orientation: "vertical"
+                                CustLabel:
+                                    text: "Confidentiality Requirement (CR)"
+                                BoxLayout:
+                                    orientation: "horizontal"
+                                    ToggleButton:
+                                        text: "Not Defined (CR:X)"
+                                        group: "cr"
+                                        id: 'x'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "Low (CR:L)"
+                                        group: "cr"
+                                        id: 'l'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "Medium (CR:M)"
+                                        group: "cr"
+                                        id: 'm'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "High (CR:H)"
+                                        group: "cr"
+                                        id: 'h'
+                                        on_press: root.calculate_v3(self.text)
+
+
+                                CustLabel:
+                                    text: "Integrity Requirement (IR)"
+                                BoxLayout:
+                                    orientation: "horizontal"
+                                    ToggleButton:
+                                        text: "Not Defined (IR:X)"
+                                        group: "ir"
+                                        id: 'x'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "Low (IR:L)"
+                                        group: "ir"
+                                        id: 'l'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "Medium (IR:M)"
+                                        group: "ir"
+                                        id: 'm'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "High (IR:H)"
+                                        group: "ir"
+                                        id: 'h'
+                                        on_press: root.calculate_v3(self.text)
+
+
+                                CustLabel:
+                                    text: "Availability Requirement (AR)"
+                                BoxLayout:
+                                    orientation: "horizontal"
+                                    ToggleButton:
+                                        text: "Not Defined (AR:X)"
+                                        group: "ar"
+                                        id: 'x'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "Low (AR:L)"
+                                        group: "ar"
+                                        id: 'l'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "Medium (AR:M)"
+                                        group: "ar"
+                                        id: 'm'
+                                        on_press: root.calculate_v3(self.text)
+                                    ToggleButton:
+                                        text: "High (AR:H)"
+                                        group: "ar"
+                                        id: 'h'
+                                        on_press: root.calculate_v3(self.text)
